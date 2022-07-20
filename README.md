@@ -13,5 +13,6 @@
 > docker run -dp 3000:3000 -v todo-db:etc/todos getting-started <br />
 
 ## To run the instance in development mode...<br/>
+(Auuggh this isn't working right now, and I'm not sure why)<br/>
 cd into the docker-tutorial folder then run the following... <br/>
 > docker run -dp 3000:3000 -w /app -v "$(pwd):/app" node:12-alpine sh -c "yarn install && yarn run dev"
