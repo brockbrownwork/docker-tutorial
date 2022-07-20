@@ -12,5 +12,6 @@
 > docker volume create todo-db <br/>
 > docker run -dp 3000:3000 -v todo-db:etc/todos getting-started <br />
 
-## To run the instance in development mode...
+## To run the instance in development mode...<br/>
+cd into the docker-tutorial folder then run the following... <br/>
 > docker run -dp 3000:3000 -w /app -v "$(pwd):/app" node:12-alpine sh -c "yarn install && yarn run dev"
