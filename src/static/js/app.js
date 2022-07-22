@@ -5,10 +5,15 @@ function App() {
             <Row>
                 <Col md={{ offset: 3, span: 6 }}>
                     <TodoListCard />
+					<SomethingStupid dumb = 'aseiohasleij'/>
                 </Col>
             </Row>
         </Container>
     );
+}
+
+function SomethingStupid(props) {
+	return <p>Here's something stupid, {props.dumb}</p>
 }
 
 function TodoListCard() {
@@ -53,7 +58,7 @@ function TodoListCard() {
         <React.Fragment>
             <AddItemForm onNewItem={onNewItem} />
             {items.length === 0 && (
-                <p className="text-center">Wow, live updates! Innit that fancy??</p>
+                <p className="text-center">Wow, live updates! Innit fancy??</p>
             )}
             {items.map(item => (
                 <ItemDisplay
