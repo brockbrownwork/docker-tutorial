@@ -3,17 +3,38 @@ function App() {
     return (
         <Container>
             <Row>
-                <Col md={{ offset: 3, span: 6 }}>
+                <Col>
                     <TodoListCard />
-					<SomethingStupid dumb = 'aseiohasleij'/>
                 </Col>
             </Row>
+			<Row>
+				<Col>
+					<SomethingStupid dumb = 'aeiou'/>
+				</Col>
+				<Col>
+					<p>Hey, there's something over here too!</p>
+				</Col>
+				<Col>
+				Nothing to see over here...
+				</Col>
+			</Row>
         </Container>
     );
 }
 
 function SomethingStupid(props) {
-	return <p>Here's something stupid, {props.dumb}</p>
+	const [count, setCount] = React.useState(0);
+	
+	React.useEffect( () => {
+		console.log(`Whoa! The state just changed.\nCount is currently at ${count}.`);
+	});
+	
+	return <span><p>Here's something stupid, {props.dumb}.</p>
+      <button onClick={() => setCount(count + 1)}>
+        Click me
+      </button>
+	  <p>{count}</p>
+	  </span>
 }
 
 function TodoListCard() {
@@ -111,7 +132,7 @@ function AddItemForm({ onNewItem }) {
                         disabled={!newItem.length}
                         className={submitting ? 'disabled' : ''}
                     >
-                        {submitting ? 'Adding...' : "I bet you don't even know what 2 + 2 is idiot"}
+                        {submitting ? 'Adding...' : "test"}
                     </Button>
                 </InputGroup.Append>
             </InputGroup>
