@@ -85,7 +85,7 @@ function YouKnowWhatsNeat() {
 	console.log(name);
   } );
 
-  const handleChange = (e) => {
+  function handleChange(e) {
 	setName(e.target.value);
   }
   const handleSubmit = (e) => {
@@ -94,13 +94,12 @@ function YouKnowWhatsNeat() {
   }
 
   return (
-    <form>
+    <form onSubmit = {handleSubmit}>
       <label>Enter your name:
         <input
           type="text" 
           value={name}
           onChange={handleChange}
-		  onSubmit={handleSubmit}
         />
       </label>
     </form>
