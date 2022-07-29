@@ -9,28 +9,117 @@ function App() {
             </Row>
 			<Row>
 				<Col>
-					<SomethingStupid dumb = 'aeiou'/>
+					<SomethingStupid dumb = 'aeiou' count = '100'/>
 				</Col>
 				<Col>
-					<p>Hey, there's something over here too!</p>
+					<SomethingStupid dumb = 'whoops' count = '-42'/>
 				</Col>
 				<Col>
-				Nothing to see over here...
+					<YouKnowWhatsNeat/>
 				</Col>
 			</Row>
         </Container>
     );
 }
+/* 
+class YouKnowWhatsNeat extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {value: ''};
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleChange(event) {
+    this.setState({value: event.target.value});
+  }
+
+  handleSubmit(event) {
+    alert('A name was submitted: ' + this.state.value);
+    event.preventDefault();
+  }
+
+  render() {
+    return (
+      <form onSubmit={this.handleSubmit}>
+        <label>
+          Name:
+          <input type="text" value={this.state.value} onChange={this.handleChange} />
+        </label>
+        <input type="submit" value="Submit" />
+      </form>
+    );
+  }
+}
+ */
+
+/*
+function YouKnowWhatsNeat(props) {
+	const [whatsNeat, setWhatsNeat] = React.useState('Butterflies');
+	
+	React.useEffect( () => {
+		console.log(`You know what's neat? ${whatsNeat}`);
+	});
+	
+	function changeWhatsNeat(){
+		const whatsNeatString = document.getElementById("whatsNeat").text;
+		setWhatsNeat(whatsNeatString);
+	}
+	
+	return (
+	<span>
+		<form>
+			<input type = "text" id = "whatsNeat"/>
+			<input type = "submit" id = "whatsNeatButton"/>
+		</form>
+		<p>You know what's neat? {whatsNeat}.</p>
+	</span> )
+}
+*/
+
+function YouKnowWhatsNeat() {
+  const [name, setName] = React.useState("");
+
+  React.useEffect( () => {
+	console.log(name);
+  } );
+
+  const handleChange = (e) => {
+	setName(e.target.value);
+  }
+  const handleSubmit = (e) => {
+	e.preventDefault();
+	setName(e.target.value);
+  }
+
+  return (
+    <form>
+      <label>Enter your name:
+        <input
+          type="text" 
+          value={name}
+          onChange={handleChange}
+		  onSubmit={handleSubmit}
+        />
+      </label>
+    </form>
+  )
+}
 
 function SomethingStupid(props) {
-	const [count, setCount] = React.useState(0);
+	const [count, setCount] = React.useState(props.count ? parseInt(props.count) : 0);
 	
 	React.useEffect( () => {
 		console.log(`Whoa! The state just changed.\nCount is currently at ${count}.`);
 	});
 	
+	function increment() {
+		setCount(count + 1);
+	}
+	
 	return <span><p>Here's something stupid, {props.dumb}.</p>
-      <button onClick={() => setCount(count + 1)}>
+      <button onClick={increment}>
         Click me
       </button>
 	  <p>{count}</p>
