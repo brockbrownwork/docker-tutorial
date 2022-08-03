@@ -2,6 +2,16 @@ function App() {
     const { Container, Row, Col } = ReactBootstrap;
     return (
         <Container>
+		<KeystrokeListener/>
+			<Row>
+				<Col>
+					<div class = "center">
+						<img src = "signet_logo.png" width = "25%" />
+						<br/><br/>
+						<p>Tracking System</p>
+					</div>
+				</Col>
+			</Row>
             <Row>
                 <Col>
                     <TodoListCard />
@@ -15,7 +25,7 @@ function App() {
 					<SomethingStupid dumb = 'whoops' count = '-42'/>
 				</Col>
 				<Col>
-					<YouKnowWhatsNeat/>
+					<YouKnowWhatsNeat whatsNeat = 'Butterflies'/>
 				</Col>
 			</Row>
         </Container>
@@ -78,32 +88,61 @@ function YouKnowWhatsNeat(props) {
 }
 */
 
-function YouKnowWhatsNeat() {
-  const [name, setName] = React.useState("");
+var keystrokes = [];
+var lastKeystrokeTime = Date.now() / 1000;
+function KeystrokeListener() {
+  React.useEffect(() => {
+    const handleKeyDown = (event) => {
+       console.log(event.key);
+	   keystrokes.push(event.key);
+	   console.log("keystrokes: " + String(keystrokes));
+	   const secondsSinceEpoch = Date.now() / 1000;
+	   console.log("secondsSinceEpoch: " + String(secondsSinceEpoch));
+	   console.log("Time between keystrokes: " + String(secondsSinceEpoch - lastKeystrokeTime));
+	   lastKeystrokeTime = secondsSinceEpoch;
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+  return(<p>The <i>listener</i> lives here</p>);
+}
+
+function YouKnowWhatsNeat(props) {
+  const [name, setName] = React.useState(props.whatsNeat);
+  let period = '.';
 
   React.useEffect( () => {
-	console.log(name);
+	// console.log(name);
+	// console.log("is this triggering?");
   } );
 
   function handleChange(e) {
-	setName(e.target.value);
+	let newName = String(e.target.value);
+	if (newName.length > 0) {
+		newName = newName[0].toUpperCase() + newName.slice(1);
+	}
+	setName(newName);
   }
   const handleSubmit = (e) => {
 	e.preventDefault();
 	setName(e.target.value);
+	console.log("name: " + name);
+	setName('');
   }
 
   return (
-    <form onSubmit = {handleSubmit}>
+    <form onSubmit = {handleSubmit} onChange = {handleChange}>
       <label>Enter your name:
         <input
           type="text" 
           value={name}
-          onChange={handleChange}
         />
       </label>
+	  <p>You know what's neat?</p><p><b>{name}</b></p>
     </form>
-  )
+  );
 }
 
 function SomethingStupid(props) {
@@ -117,12 +156,12 @@ function SomethingStupid(props) {
 		setCount(count + 1);
 	}
 	
-	return <span><p>Here's something stupid, {props.dumb}.</p>
+	return <React.Fragment><p>Here's something of value, {props.dumb}.</p>
       <button onClick={increment}>
         Click me
       </button>
 	  <p>{count}</p>
-	  </span>
+	  </React.Fragment>
 }
 
 function TodoListCard() {
