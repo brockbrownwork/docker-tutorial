@@ -19,7 +19,7 @@ function App() {
             </Row>
 			<Row>
 				<Col>
-					<SomethingStupid dumb = 'aeiou' count = '100'/>
+					<Dropdown/>
 				</Col>
 				<Col>
 					<SomethingStupid dumb = 'whoops' count = '-42'/>
@@ -31,83 +31,60 @@ function App() {
         </Container>
     );
 }
-/* 
-class YouKnowWhatsNeat extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {value: ''};
-
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  handleChange(event) {
-    this.setState({value: event.target.value});
-  }
-
-  handleSubmit(event) {
-    alert('A name was submitted: ' + this.state.value);
-    event.preventDefault();
-  }
-
-  render() {
-    return (
-      <form onSubmit={this.handleSubmit}>
-        <label>
-          Name:
-          <input type="text" value={this.state.value} onChange={this.handleChange} />
-        </label>
-        <input type="submit" value="Submit" />
-      </form>
-    );
-  }
-}
- */
-
-/*
-function YouKnowWhatsNeat(props) {
-	const [whatsNeat, setWhatsNeat] = React.useState('Butterflies');
-	
-	React.useEffect( () => {
-		console.log(`You know what's neat? ${whatsNeat}`);
-	});
-	
-	function changeWhatsNeat(){
-		const whatsNeatString = document.getElementById("whatsNeat").text;
-		setWhatsNeat(whatsNeatString);
-	}
-	
-	return (
-	<span>
-		<form>
-			<input type = "text" id = "whatsNeat"/>
-			<input type = "submit" id = "whatsNeatButton"/>
-		</form>
-		<p>You know what's neat? {whatsNeat}.</p>
-	</span> )
-}
-*/
 
 var keystrokes = [];
+var keystroke_debug = true;
 var lastKeystrokeTime = Date.now() / 1000;
 function KeystrokeListener() {
+  const limitBetweenKeystrokes = 0.05; // to prevent accidental scans, i.e.: someone is mashing the keyboard
+  const minimumScanLength = 6;
   React.useEffect(() => {
     const handleKeyDown = (event) => {
-       console.log(event.key);
-	   keystrokes.push(event.key);
-	   console.log("keystrokes: " + String(keystrokes));
-	   const secondsSinceEpoch = Date.now() / 1000;
-	   console.log("secondsSinceEpoch: " + String(secondsSinceEpoch));
-	   console.log("Time between keystrokes: " + String(secondsSinceEpoch - lastKeystrokeTime));
-	   lastKeystrokeTime = secondsSinceEpoch;
+	   if  (event.keyCode >= 65 && event.keyCode <= 90 || // is it a letter?
+			event.keyCode >= 48 && event.keyCode <= 57 || // or is it a number?
+			event.key == "Enter") { // or is it the enter key?
+			console.log(event.key);
+			console.log("accumulated keystrokes: " + String(keystrokes));
+			const secondsSinceEpoch = Date.now() / 1000;
+			console.log("secondsSinceEpoch: " + String(secondsSinceEpoch));
+			const secondsBetweenKeystrokes = secondsSinceEpoch - lastKeystrokeTime;
+			console.log("Time between keystrokes: " + String(secondsSinceEpoch - lastKeystrokeTime));
+			if (secondsBetweenKeystrokes < limitBetweenKeystrokes){
+					keystrokes.push(event.key);
+					console.log(keystrokes);
+					if (keystrokes.length >= minimumScanLength && event.key == 'Enter') {
+						console.log("SCAN COMPLETED: " + keystrokes.slice(0, -1).join(''));
+					}
+			} else {
+			   keystrokes = [event.key];
+			   console.log("Timed out, keystrokes have been reset.");
+			}
+		   lastKeystrokeTime = secondsSinceEpoch;
+		}
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, []);
-  return(<p>The <i>listener</i> lives here</p>);
+  }, [keystroke_debug]);
+  if (keystroke_debug) {
+  return(<p class = 'center'>The <i>listener</i> lives here. &#128066; &#128585;</p>);
+  } else {
+	  return ('');
+  }
 }
+
+const Dropdown = () => {
+  return (
+    <div>
+      <select>
+        <option value="fruit">Fruit</option>
+        <option value="vegetable">Vegetable</option>
+        <option value="meat">Meat</option>
+      </select>
+    </div>
+  );
+};
 
 function YouKnowWhatsNeat(props) {
   const [name, setName] = React.useState(props.whatsNeat);
@@ -134,13 +111,13 @@ function YouKnowWhatsNeat(props) {
 
   return (
     <form onSubmit = {handleSubmit} onChange = {handleChange}>
-      <label>Enter your name:
+      <label>What's neat? &nbsp;
         <input
           type="text" 
           value={name}
         />
       </label>
-	  <p>You know what's neat?</p><p><b>{name}</b></p>
+	  <p>You know what's neat?<b> {name}</b></p>
     </form>
   );
 }
